@@ -12,13 +12,19 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
+
     User getByNickname(String nickname);
+
     Optional<User> findByNickname(String nickname);
+
     boolean existsByNickname(String nickname);
+
     boolean existsByEmail(String email);
 
     List<User> findByFirstNameContainingIgnoreCase(String search);
+
     List<User> findByLastNameContainingIgnoreCase(String search);
+
     List<User> findByNicknameContainingIgnoreCase(String search);
 
     User getUserByVerificationToken(String verificationToken);
