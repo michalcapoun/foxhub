@@ -60,6 +60,8 @@ export class PeoplePageComponent implements OnInit {
   restLocationFilter: User[] = [];
   restSpiritAnimalFilter: User[] = [];
 
+  queryParams: any = {};
+
   public showCookiePopup = false;
 
   constructor(
@@ -101,6 +103,25 @@ export class PeoplePageComponent implements OnInit {
         }
       }
       this.allFilters();
+    });
+  }
+
+  updateQueryParameters() {
+    this.queryParams = {};
+    this.queryParams = {
+      tech: this.selectedTechnologies,
+      lang: this.selectedLanguages,
+      loc: this.selectedLocations,
+      pers: this.selectedPersonalities,
+      color: this.selectedColorPersonalities,
+      animal: this.selectedSpiritAnimals,
+      work: [this.filterWorkPrefermentStatus] // Convert to an array
+    };
+
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: this.queryParams,
+      queryParamsHandling: 'merge' // Merge with existing query parameters
     });
   }
 
@@ -223,7 +244,6 @@ export class PeoplePageComponent implements OnInit {
   toggleTechSelection(tech: Technology) {
     const techName = tech.name;
     const techIndex = this.selectedTechnologies.indexOf(techName);
-    console.log(this.selectedTechnologies);
     if (techIndex === -1) {
       this.selectedTechnologies.push(techName);
     } else {
@@ -318,6 +338,7 @@ export class PeoplePageComponent implements OnInit {
     this.actualTechnologyValue = keys;
     this.restTechnologiesFilter = this.verifiedAndUsersOnly
       .filter(user => !actualFilteredUsers.includes(user));
+
     return actualFilteredUsers;
   }
 
@@ -545,6 +566,8 @@ export class PeoplePageComponent implements OnInit {
     }
     this.users = filteredUsers;
     this.filteredUsersRestFour;
+    this.updateQueryParameters();
+    console.log("boom");
   }
 
   clearAllFilters() {
@@ -569,5 +592,6 @@ export class PeoplePageComponent implements OnInit {
       ageAllCheckbox.checked = true;
     }
     this.allFilters();
+    this.updateQueryParameters();
   }
 }
