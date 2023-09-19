@@ -41,8 +41,6 @@ export class PeoplePageComponent implements OnInit {
   selectedLocations: string[] = [];
   selectedSpiritAnimals: string[] = [];
 
-  queryParams: string[] = [];
-
   // @ts-ignore
   filterWorkPrefermentStatus: string;
 
@@ -77,7 +75,19 @@ export class PeoplePageComponent implements OnInit {
     this.showCookiePopup = this.cookieService.get('cookie_consent') !== 'true';
     this.activatedRoute.queryParams.subscribe(params =>{
        // @ts-ignore
-      this.selectedTechnologies.push(params.tech);
+      this.selectedTechnologies = Array.isArray(params.tech) ? params.tech : [params.tech];
+      // @ts-ignore
+      this.selectedLanguages = Array.isArray(params.lang) ? params.lang : [params.lang];
+      // @ts-ignore
+      this.selectedLocations = Array.isArray(params.loc) ? params.loc : [params.loc];
+      // @ts-ignore
+      this.selectedPersonalities = Array.isArray(params.pers) ? params.pers : [params.pers];
+      // @ts-ignore
+      this.selectedColorPersonalities = Array.isArray(params.color) ? params.color : [params.color];
+      // @ts-ignore
+      this.selectedSpiritAnimals = Array.isArray(params.animal) ? params.animal : [params.animal];
+      // @ts-ignore
+      this.filterWorkPrefermentStatus = params.work;
     });
 
     // @ts-ignore
