@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
     private final JwtUtils jwtUtils;
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-
     @Override
     public Optional<User> findById(Long id) {
         assert userRepository != null;
