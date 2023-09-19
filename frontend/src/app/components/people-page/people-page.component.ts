@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {User} from "../../models/user";
 import {Technology} from "../../models/technology";
 import {Language} from "../../models/language";
@@ -25,7 +25,7 @@ export class PeoplePageComponent implements OnInit {
   addedUsers: User[] = [];
   verifiedAndUsersOnly: User[] = [];
   nonFilteredUsers: User[] = [];
-  filteredUsersRest: User[]= [];
+  filteredUsersRest: User[] = [];
 
   usedTechnologies: Technology[] = [];
   usedLanguages: Language[] = [];
@@ -40,8 +40,6 @@ export class PeoplePageComponent implements OnInit {
   selectedColorPersonalities: string[] = [];
   selectedLocations: string[] = [];
   selectedSpiritAnimals: string[] = [];
-
-  queryParams: string[] = [];
 
   // @ts-ignore
   filterWorkPrefermentStatus: string;
@@ -62,6 +60,8 @@ export class PeoplePageComponent implements OnInit {
   restLocationFilter: User[] = [];
   restSpiritAnimalFilter: User[] = [];
 
+  queryParams: any = {};
+
   public showCookiePopup = false;
 
   constructor(
@@ -75,9 +75,15 @@ export class PeoplePageComponent implements OnInit {
   ngOnInit(): void {
     this.filterWorkPrefermentStatus = "all";
     this.showCookiePopup = this.cookieService.get('cookie_consent') !== 'true';
-    this.activatedRoute.queryParams.subscribe(params =>{
-       // @ts-ignore
-      this.selectedTechnologies.push(params.tech);
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.selectedTechnologies = this.getArrayQueryParam('tech');
+      this.selectedLanguages = this.getArrayQueryParam('lang');
+      this.selectedLocations = this.getArrayQueryParam('loc');
+      this.selectedPersonalities = this.getArrayQueryParam('pers');
+      this.selectedColorPersonalities = this.getArrayQueryParam('color');
+      this.selectedSpiritAnimals = this.getArrayQueryParam('animal');
+      this.filterWorkPrefermentStatus = this.getArrayQueryParam('work')[0] || 'all';
+
     });
 
     // @ts-ignore
@@ -100,6 +106,32 @@ export class PeoplePageComponent implements OnInit {
     });
   }
 
+  updateQueryParameters() {
+    this.queryParams = {};
+    this.queryParams = {
+      tech: this.selectedTechnologies,
+      lang: this.selectedLanguages,
+      loc: this.selectedLocations,
+      pers: this.selectedPersonalities,
+      color: this.selectedColorPersonalities,
+      animal: this.selectedSpiritAnimals,
+      work: [this.filterWorkPrefermentStatus] // Convert to an array
+    };
+
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: this.queryParams,
+      queryParamsHandling: 'merge' // Merge with existing query parameters
+    });
+  }
+
+  private getArrayQueryParam(paramName: string): string[] {
+    const params = this.activatedRoute.snapshot.queryParams;
+    const paramValue = params[paramName];
+
+    return Array.isArray(paramValue) ? paramValue : paramValue ? [paramValue] : [];
+  }
+
   acceptCookies() {
     this.cookieService.set('cookie_consent', 'true');
     this.showCookiePopup = false;
@@ -111,7 +143,7 @@ export class PeoplePageComponent implements OnInit {
   }
 
   // @ts-ignore
-  get filteredUsersRestFour(){
+  get filteredUsersRestFour() {
     // @ts-ignore
     this.filteredUsersRest = this.nonFilteredUsers.filter(user => user.outOfFilters?.length > 4);
   }
@@ -146,7 +178,7 @@ export class PeoplePageComponent implements OnInit {
   }
 
   // @ts-ignore
-  usedLanguagesList(){
+  usedLanguagesList() {
     const usedLangNames: string[] = [];
     for (let user of this.users) {
       // @ts-ignore
@@ -161,7 +193,7 @@ export class PeoplePageComponent implements OnInit {
   }
 
   // @ts-ignore
-  usedPersonalitiesList(){
+  usedPersonalitiesList() {
     const usedPersNames: string[] = [];
     for (let user of this.users) {
       const persName = user.personality?.name.toLowerCase();
@@ -177,7 +209,7 @@ export class PeoplePageComponent implements OnInit {
   }
 
   // @ts-ignore
-  usedColorPersonalitiesList(){
+  usedColorPersonalitiesList() {
     const usedColorPersonalityIds: number[] = [];
     this.usedColorPersonalities = [];
     for (let user of this.users) {
@@ -190,7 +222,7 @@ export class PeoplePageComponent implements OnInit {
     return this.usedColorPersonalities;
   }
 
-  usedSpiritAnimalsList(){
+  usedSpiritAnimalsList() {
     const usedAnimalsNames: string[] = [];
     for (let user of this.users) {
       const animalName = user.spiritAnimal?.name.toLowerCase();
@@ -198,7 +230,7 @@ export class PeoplePageComponent implements OnInit {
         if (animalName != null) {
           usedAnimalsNames.push(animalName);
         }
-        if (user.spiritAnimal){
+        if (user.spiritAnimal) {
           this.usedSpiritAnimals.push(user.spiritAnimal);
         }
       }
@@ -212,7 +244,6 @@ export class PeoplePageComponent implements OnInit {
   toggleTechSelection(tech: Technology) {
     const techName = tech.name;
     const techIndex = this.selectedTechnologies.indexOf(techName);
-    console.log(this.selectedTechnologies);
     if (techIndex === -1) {
       this.selectedTechnologies.push(techName);
     } else {
@@ -307,6 +338,7 @@ export class PeoplePageComponent implements OnInit {
     this.actualTechnologyValue = keys;
     this.restTechnologiesFilter = this.verifiedAndUsersOnly
       .filter(user => !actualFilteredUsers.includes(user));
+
     return actualFilteredUsers;
   }
 
@@ -534,6 +566,8 @@ export class PeoplePageComponent implements OnInit {
     }
     this.users = filteredUsers;
     this.filteredUsersRestFour;
+    this.updateQueryParameters();
+    console.log("boom");
   }
 
   clearAllFilters() {
@@ -558,5 +592,6 @@ export class PeoplePageComponent implements OnInit {
       ageAllCheckbox.checked = true;
     }
     this.allFilters();
+    this.updateQueryParameters();
   }
 }
