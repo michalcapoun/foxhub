@@ -13,11 +13,14 @@ import com.gfa.foxbook.foxbook.services.interfaces.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 @Service
@@ -139,8 +142,7 @@ public class UserServiceImpl implements UserService {
         if (currentRole.equals("USER")) {
             Role newRole = new Role("ADMIN");
             user.getRoles().set(0, newRole);
-        }
-        else if (currentRole.equals("ADMIN")) {
+        } else if (currentRole.equals("ADMIN")) {
             Role newRole = new Role("USER");
             user.getRoles().set(0, newRole);
         }
