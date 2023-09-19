@@ -12,9 +12,10 @@ public interface UserService {
 
     void delete(User user);
 
+    List<User> getAll();
+
     User getUserByVerificationToken(String verificationToken);
 
-    List<User> getAll();
 
     Optional<User> findByNickname(String nickname);
 
