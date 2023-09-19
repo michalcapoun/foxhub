@@ -1,4 +1,5 @@
 import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import {User} from "../../models/user";
 import {Technology} from "../../models/technology";
 import {Language} from "../../models/language";
@@ -40,6 +41,8 @@ export class PeoplePageComponent implements OnInit {
   selectedLocations: string[] = [];
   selectedSpiritAnimals: string[] = [];
 
+  queryParams: string[] = [];
+
   // @ts-ignore
   filterWorkPrefermentStatus: string;
 
@@ -63,12 +66,19 @@ export class PeoplePageComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private cookieService: CookieService,) {
+    private cookieService: CookieService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute) {
+
   }
 
   ngOnInit(): void {
     this.filterWorkPrefermentStatus = "all";
     this.showCookiePopup = this.cookieService.get('cookie_consent') !== 'true';
+    this.activatedRoute.queryParams.subscribe(params =>{
+       // @ts-ignore
+      this.selectedTechnologies.push(params.tech);
+    });
 
     // @ts-ignore
     this.apiService.getAll().subscribe(users => {
@@ -86,6 +96,7 @@ export class PeoplePageComponent implements OnInit {
           user.inCart = true;
         }
       }
+      this.allFilters();
     });
   }
 
@@ -201,6 +212,7 @@ export class PeoplePageComponent implements OnInit {
   toggleTechSelection(tech: Technology) {
     const techName = tech.name;
     const techIndex = this.selectedTechnologies.indexOf(techName);
+    console.log(this.selectedTechnologies);
     if (techIndex === -1) {
       this.selectedTechnologies.push(techName);
     } else {
