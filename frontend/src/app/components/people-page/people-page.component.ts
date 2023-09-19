@@ -107,7 +107,6 @@ export class PeoplePageComponent implements OnInit {
   }
 
   updateQueryParameters() {
-    this.queryParams = {};
     this.queryParams = {
       tech: this.selectedTechnologies,
       lang: this.selectedLanguages,
@@ -567,7 +566,6 @@ export class PeoplePageComponent implements OnInit {
     this.users = filteredUsers;
     this.filteredUsersRestFour;
     this.updateQueryParameters();
-    console.log("boom");
   }
 
   clearAllFilters() {
