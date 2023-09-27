@@ -35,6 +35,9 @@ public class EmailServiceImpl {
     public String generateVerificationEmail(String token) {
         return "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"><title>Email Verification for FoxHub</title></head><body><div style=\"max-width:600px;margin:0 auto;padding:20px;background-color:#ffffff;box-shadow:0px 0px 10px 0px rgba(0,0,0,0.1);\"><h1 style=\"color:#4CAF50;text-align:left;\">Email Verification for FoxHub</h1><p style=\"color:#666666;\">Thank you for registering with FoxHub. Please verify your email by clicking on the link below:</p><p style=\"color:#666666;\"><a href=\"http://foxhub.gfapp.eu/api/v1/auth/verify-email/" + token + "\" style=\"color: #4CAF50;\">Verify Email</a></p><p style=\"margin-top:20px;font-size:12px;color:#aaaaaa;text-align:center;\">If you did not register for an account with FoxHub, please ignore this email.</p></div></body></html>";
     }
+    public String generateInvitationEmail(){
+        return "Hello, welcome to Foxhub. Please register yourself here:";
+    }
 
     // Check how the list of users is displayed after logic is implemented
     public String generateOrderToGFAEmail(List<User> selectedUsers, String headhunterName) {
