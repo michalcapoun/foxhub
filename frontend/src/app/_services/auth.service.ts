@@ -21,6 +21,25 @@ export class AuthService {
     private toastr: ToastrService) {
   }
 
+  invite(email: string):Observable<any> {
+    return this.http.post(
+      prefix + '/api/v1/admin/' + 'invite',
+      {
+        email
+      },
+      httpOptions
+    ).pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = 'An unknown error occurred.';
+        if (error.status === 401) {
+          errorMessage = error.error;
+        }
+        this.toastr.error(errorMessage, 'Error', { timeOut: 5000 });
+        return throwError(errorMessage);
+      })
+    );
+  }
+
   login(email: string, password: string): Observable<any> {
     return this.http.post(
       AUTH_API + 'login',

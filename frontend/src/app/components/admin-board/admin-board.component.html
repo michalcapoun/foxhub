@@ -7,41 +7,51 @@
   <div class="py-5 text-center">
     <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-4 page-header"><span>Admin</span> Dash Board</h1>
   </div>
+  <div>
+    <form name="form" (ngSubmit)="onSubmit()" #f="ngForm" novalidate>
 
+      <label for="invite_user">Invite user: </label>
+      <input class="m-1" type="email" name="email" id="invite_user" placeholder="email" [(ngModel)]="form.email" required #email="ngModel" />
+
+      <button class="btn-primary" type="submit">Invite</button>
+    </form>
+  </div>
+  <br>
   <table class="table table-condensed">
     <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Role</th>
-        <th scope="col"></th>
-        <th scope="col"> Verified Status</th>
-        <th scope="col"></th>
-      </tr>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Role</th>
+      <th scope="col"></th>
+      <th scope="col">Verified Status</th>
+      <th scope="col"></th>
+    </tr>
     </thead>
     <tbody>
 
 
-      <tr *ngFor="let user of users">
-        <td>{{user.firstName}} {{user.lastName}}</td>
-        <td>{{user.role?.name}}</td>
-        <td>
-          <button class="btn-primary btn" type="button" data-toggle="modal" (click)="setSelectedUser(user)"
-            data-target="#changeRole">Change Role</button>
-        </td>
-        <td>{{user.verified}}</td>
-        <td>
-          <button class="post-action btn btn-outline-danger" type="button" data-toggle="modal"
-            data-target="#confirmDelete" (click)="setSelectedUser(user)">
-            Remove
-          </button>
-        </td>
-      </tr>
+    <tr *ngFor="let user of users">
+      <td>{{user.firstName}} {{user.lastName}}</td>
+      <td>{{user.role?.name}}</td>
+      <td>
+        <button class="btn-primary btn" type="button" data-toggle="modal" (click)="setSelectedUser(user)"
+                data-target="#changeRole">Change Role
+        </button>
+      </td>
+      <td>{{user.verified}}</td>
+      <td>
+        <button class="post-action btn btn-outline-danger" type="button" data-toggle="modal"
+                data-target="#confirmDelete" (click)="setSelectedUser(user)">
+          Remove
+        </button>
+      </td>
+    </tr>
 
     </tbody>
   </table>
   <!--delete user modal-->
   <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteLabel"
-    aria-hidden="true">
+       aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -62,7 +72,7 @@
   </div>
   <!--  upgrade user modal-->
   <div class="modal fade" id="changeRole" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteLabel"
-    aria-hidden="true">
+       aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">

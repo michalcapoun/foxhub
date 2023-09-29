@@ -1,14 +1,17 @@
 package com.gfa.foxbook.foxbook.controllers;
 
+import com.gfa.foxbook.foxbook.models.dtos.InviteUserDTO;
 import com.gfa.foxbook.foxbook.models.nonusermodels.Comment;
 import com.gfa.foxbook.foxbook.models.nonusermodels.Post;
 import com.gfa.foxbook.foxbook.models.User;
 import com.gfa.foxbook.foxbook.models.dtos.PostDTO;
 import com.gfa.foxbook.foxbook.repositories.CommentRepository;
 import com.gfa.foxbook.foxbook.security.jwt.JwtUtils;
+import com.gfa.foxbook.foxbook.services.EmailServiceImpl;
 import com.gfa.foxbook.foxbook.services.interfaces.CommentService;
 import com.gfa.foxbook.foxbook.services.interfaces.PostService;
 import com.gfa.foxbook.foxbook.services.interfaces.UserService;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +30,21 @@ public class AdminController {
     public final UserService userService;
     private final CommentRepository commentRepository;
     private final CommentService commentService;
+    private final EmailServiceImpl emailService;
+
+    @PostMapping("/invite")
+    public ResponseEntity<?> inviteUser(@RequestBody InviteUserDTO inviteUserDTO) throws MessagingException {
+        if (inviteUserDTO.getEmail().isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+        if (userService.findByEmail(inviteUserDTO.getEmail()).isPresent()){
+            return ResponseEntity.badRequest().body("User alredy exists");
+        }
+        emailService.send(inviteUserDTO.getEmail(),"Welocome to Foxhub",emailService.generateInvitationEmail());
+        return ResponseEntity.ok().build();
+
+
+    }
 
     @PostMapping("/posts")
     public ResponseEntity<?> makePost(@RequestBody Post post, HttpServletRequest request) {
