@@ -22,6 +22,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     private UUID uuid;
     private String verificationToken;
     private boolean verified;
